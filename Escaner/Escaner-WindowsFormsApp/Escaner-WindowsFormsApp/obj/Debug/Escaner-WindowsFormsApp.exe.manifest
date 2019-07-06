@@ -78,14 +78,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Escaner-WindowsFormsApp.exe" size="182768">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Escaner-WindowsFormsApp.exe" size="182256">
       <assemblyIdentity name="Escaner-WindowsFormsApp" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ynWwXJyHHaXK4yY98MOXT3VJ9rXlvswe/vZhsbTgrnI=</dsig:DigestValue>
+        <dsig:DigestValue>gSB4WeCD7CD0ScDlPxHTxxgJlO1inIeRNPx+hBNc1ds=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
