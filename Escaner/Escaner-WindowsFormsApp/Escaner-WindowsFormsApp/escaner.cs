@@ -39,6 +39,8 @@ namespace Escaner_WindowsFormsApp
         }
         String output;
         String path;
+        String valorB;
+        String valorA;
 
         void NewFrame_event(object send, NewFrameEventArgs e) {
             try {
@@ -122,13 +124,13 @@ namespace Escaner_WindowsFormsApp
         private void Button3_Click(object sender, EventArgs e)
         {
             //Declaramos el valor que enviaremos al puerto
-            string valorA = "a";
+            valorA = "a";
 
             //La rutina a dura 152 segundos
             try
             {
                 //Creamos las carpeta
-                path = output + "\\" + textCedula.Text;
+                path = output + "\\" + textCedula.Text + valorA;
 
                 if (Directory.Exists(path))
                 {
@@ -155,7 +157,7 @@ namespace Escaner_WindowsFormsApp
                         serialPort1.Write(valorA);
 
                         //Creamos la carpeta en el servidor
-                        WebRequest request = WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text);
+                        WebRequest request = WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorA);
                         request.Method = WebRequestMethods.Ftp.MakeDirectory;
                         request.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
                         try
@@ -197,7 +199,7 @@ namespace Escaner_WindowsFormsApp
                         pictureBox1.Image.Save(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
 
                         //Subimos al servidor las imagenes
-                        FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
+                        FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorA + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
 
                         ftpReq.UseBinary = true;
                         ftpReq.Method = WebRequestMethods.Ftp.UploadFile;
@@ -233,13 +235,13 @@ namespace Escaner_WindowsFormsApp
         private void Button2_Click(object sender, EventArgs e)
         {
             //Declaramos el valor que enviaremos al puerto
-            string valorB = "b";
+            valorB = "b";
 
             //La rutina a dura 33 segundos
             try
             {
                 //Creamos las carpeta
-                path = output + "\\" + textCedula.Text;
+                path = output + "\\" + textCedula.Text + valorB;
 
                 if (Directory.Exists(path))
                 {
@@ -260,13 +262,16 @@ namespace Escaner_WindowsFormsApp
 
                     if (output != "" && pictureBox1.Image != null)
                     {
+                       //pictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipY);
+                        
+
                         //Abrimos el puerto
                         serialPort1.Open();
                         //Enviamos el valor al puerto
                         serialPort1.Write(valorB);
 
                         //Creamos la carpeta en el servidor
-                        WebRequest request = WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text);
+                        WebRequest request = WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorB);
                         request.Method = WebRequestMethods.Ftp.MakeDirectory;
                         request.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
                         try
@@ -304,7 +309,7 @@ namespace Escaner_WindowsFormsApp
                     pictureBox1.Image.Save(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
 
                     //Subimos al servidor las imagenes
-                    FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text  + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
+                    FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorB  + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
 
                     ftpReq.UseBinary = true;
                     ftpReq.Method = WebRequestMethods.Ftp.UploadFile;
@@ -395,6 +400,11 @@ namespace Escaner_WindowsFormsApp
             this.Hide();
             configuraciones ventanaConfiguraciones = new configuraciones();
             ventanaConfiguraciones.Show();
+        }
+
+        private void PictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
