@@ -38,7 +38,6 @@
             this.historialPacienteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.escanearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.administraciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.permisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configuraciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -111,36 +110,29 @@
             // historialPacienteToolStripMenuItem
             // 
             this.historialPacienteToolStripMenuItem.Name = "historialPacienteToolStripMenuItem";
-            this.historialPacienteToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.historialPacienteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.historialPacienteToolStripMenuItem.Text = "Historial Paciente";
             this.historialPacienteToolStripMenuItem.Click += new System.EventHandler(this.HistorialPacienteToolStripMenuItem_Click);
             // 
             // escanearToolStripMenuItem
             // 
             this.escanearToolStripMenuItem.Name = "escanearToolStripMenuItem";
-            this.escanearToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.escanearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.escanearToolStripMenuItem.Text = "Escanear";
             this.escanearToolStripMenuItem.Click += new System.EventHandler(this.EscanearToolStripMenuItem_Click);
             // 
             // administraciónToolStripMenuItem
             // 
             this.administraciónToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.permisosToolStripMenuItem,
             this.configuraciónToolStripMenuItem});
             this.administraciónToolStripMenuItem.Name = "administraciónToolStripMenuItem";
             this.administraciónToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
             this.administraciónToolStripMenuItem.Text = "Administración";
             // 
-            // permisosToolStripMenuItem
-            // 
-            this.permisosToolStripMenuItem.Name = "permisosToolStripMenuItem";
-            this.permisosToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.permisosToolStripMenuItem.Text = "Permisos";
-            // 
             // configuraciónToolStripMenuItem
             // 
             this.configuraciónToolStripMenuItem.Name = "configuraciónToolStripMenuItem";
-            this.configuraciónToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.configuraciónToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.configuraciónToolStripMenuItem.Text = "Configuración";
             this.configuraciónToolStripMenuItem.Click += new System.EventHandler(this.ConfiguraciónToolStripMenuItem_Click);
             // 
@@ -330,7 +322,6 @@
         private System.Windows.Forms.ToolStripMenuItem historialPacienteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem escanearToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem administraciónToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem permisosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configuraciónToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;

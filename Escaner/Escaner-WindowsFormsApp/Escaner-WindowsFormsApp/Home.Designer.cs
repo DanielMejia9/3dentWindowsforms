@@ -37,7 +37,6 @@
             this.historialPacienteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.escanearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.administraciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.permisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configuraciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
@@ -106,23 +105,15 @@
             // administraciónToolStripMenuItem
             // 
             this.administraciónToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.permisosToolStripMenuItem,
             this.configuraciónToolStripMenuItem});
             this.administraciónToolStripMenuItem.Name = "administraciónToolStripMenuItem";
             this.administraciónToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
             this.administraciónToolStripMenuItem.Text = "Administración";
             // 
-            // permisosToolStripMenuItem
-            // 
-            this.permisosToolStripMenuItem.Name = "permisosToolStripMenuItem";
-            this.permisosToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.permisosToolStripMenuItem.Text = "Permisos";
-            this.permisosToolStripMenuItem.Click += new System.EventHandler(this.PermisosToolStripMenuItem_Click);
-            // 
             // configuraciónToolStripMenuItem
             // 
             this.configuraciónToolStripMenuItem.Name = "configuraciónToolStripMenuItem";
-            this.configuraciónToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.configuraciónToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.configuraciónToolStripMenuItem.Text = "Configuración";
             this.configuraciónToolStripMenuItem.Click += new System.EventHandler(this.ConfiguraciónToolStripMenuItem_Click);
             // 
@@ -165,7 +156,6 @@
         private System.Windows.Forms.ToolStripMenuItem pacientesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem consultarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem administraciónToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem permisosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configuraciónToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem historialPacienteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem escanearToolStripMenuItem;
