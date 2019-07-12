@@ -24,6 +24,7 @@ namespace Escaner_WindowsFormsApp
         VideoCaptureDevice frame;
         FilterInfoCollection Devices;
         System.Timers.Timer t;
+        System.Timers.Timer k;
         int contador;
 
         public escaner()
@@ -197,38 +198,59 @@ namespace Escaner_WindowsFormsApp
                     if (contador < 152)
                     {
                         pictureBox1.Image.Save(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
-
-                        //Subimos al servidor las imagenes
-                        FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorA + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
-
-                        ftpReq.UseBinary = true;
-                        ftpReq.Method = WebRequestMethods.Ftp.UploadFile;
-                        ftpReq.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
-
-                        //byte[] b = File.ReadAllBytes(@"C:\prueba\111\target.zip");
-                        byte[] b = File.ReadAllBytes(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
-                        ftpReq.ContentLength = b.Length;
-                        using (Stream s = ftpReq.GetRequestStream())
-                        {
-                            s.Write(b, 0, b.Length);
-                        }
-
-                        FtpWebResponse ftpResp = (FtpWebResponse)ftpReq.GetResponse();
-
-                        if (ftpResp != null)
-                        {
-                            if (ftpResp.StatusDescription.StartsWith("226"))
-                            {
-                                Console.WriteLine("File Uploaded.");
-                            }
-
-                        }
                     }
                     else
                     {
-                        t.Stop();
+                        //t.Stop();
+                        //Creamos el timer para la rutina de tomar imagenes
+                        t = new System.Timers.Timer();
+                        t.Interval = 1000;
+                        t.Elapsed += OnTimeEvent4;
+                        contador = 0;
+                        t.Start();
                     }
                 }));
+            }));
+        }
+
+        private void OnTimeEvent4(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Invoke(new Action(() =>
+            {
+                contador += 1;
+
+                if (contador < 152)
+                {
+
+                    //Subimos al servidor las imagenes
+                    FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorA + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
+
+                    ftpReq.UseBinary = true;
+                    ftpReq.Method = WebRequestMethods.Ftp.UploadFile;
+                    ftpReq.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
+
+                    //byte[] b = File.ReadAllBytes(@"C:\prueba\111\target.zip");
+                    byte[] b = File.ReadAllBytes(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
+                    ftpReq.ContentLength = b.Length;
+                    using (Stream s = ftpReq.GetRequestStream())
+                    {
+                        s.Write(b, 0, b.Length);
+                    }
+
+                    FtpWebResponse ftpResp = (FtpWebResponse)ftpReq.GetResponse();
+
+                    if (ftpResp != null)
+                    {
+                        if (ftpResp.StatusDescription.StartsWith("226"))
+                        {
+                            Console.WriteLine("File Uploaded.");
+                        }
+                    }
+                }
+                else
+                {
+                    t.Stop();
+                }
             }));
         }
 
@@ -291,6 +313,11 @@ namespace Escaner_WindowsFormsApp
                     }
                 }
                 serialPort1.Close();
+                //Creamos el timer para la rutina de tomar imagenes
+                k = new System.Timers.Timer();
+                k.Interval = 1000;
+                k.Elapsed += OnTimeEvent3;
+                contador = 0;
             }
             catch (Exception ex)
             {
@@ -308,8 +335,27 @@ namespace Escaner_WindowsFormsApp
                 {
                     pictureBox1.Image.Save(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
 
+                }
+                else
+                {
+                    t.Stop();
+                }
+            }));
+        }
+
+        //Timer despues de la rutina para subir
+
+        private void OnTimeEvent3(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Invoke(new Action(() =>
+            {
+                contador += 1;
+
+                if (contador < 33)
+                {
+
                     //Subimos al servidor las imagenes
-                    FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorB  + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
+                    FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorB + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
 
                     ftpReq.UseBinary = true;
                     ftpReq.Method = WebRequestMethods.Ftp.UploadFile;
@@ -341,7 +387,7 @@ namespace Escaner_WindowsFormsApp
             }));
         }
 
-        
+
         private void Button5_Click(object sender, EventArgs e)
         {
             if (textCedula.Text != "")
