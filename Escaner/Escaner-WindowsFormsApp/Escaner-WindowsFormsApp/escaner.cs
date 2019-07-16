@@ -22,10 +22,12 @@ namespace Escaner_WindowsFormsApp
     public partial class escaner : Form
     {
         VideoCaptureDevice frame;
+        VideoCaptureDevice frame1;
         FilterInfoCollection Devices;
         System.Timers.Timer t;
         System.Timers.Timer k;
         int contador;
+        int contador2;
 
         public escaner()
         {
@@ -33,10 +35,30 @@ namespace Escaner_WindowsFormsApp
         }
 
         void Start_cam() {
-            Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            frame = new VideoCaptureDevice(Devices[1].MonikerString);
-            frame.NewFrame += new AForge.Video.NewFrameEventHandler(NewFrame_event);
-            frame.Start();
+            try {
+                //frame.Stop();
+                Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                frame = new VideoCaptureDevice(Devices[1].MonikerString);
+                //frame1 = new VideoCaptureDevice(Devices[1].MonikerString);
+                frame.NewFrame += new AForge.Video.NewFrameEventHandler(NewFrame_event);
+                frame.Start();
+                /*if (frame != null) {
+                    frame.NewFrame += new AForge.Video.NewFrameEventHandler(NewFrame_event);
+                    frame.Start();
+                }
+                else if (frame1 != null)
+                {
+                    frame1.NewFrame += new AForge.Video.NewFrameEventHandler(NewFrame_event);
+                    frame1.Start();
+                }
+                else{
+                    MessageBox.Show("No se encontró dispositivo para escaner");
+                }*/
+            }
+            catch (Exception) {
+                MessageBox.Show("Error en dispositivo");
+            }
+            
         }
         String output;
         String path;
@@ -89,7 +111,6 @@ namespace Escaner_WindowsFormsApp
             
         }
 
-       
 
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -142,32 +163,27 @@ namespace Escaner_WindowsFormsApp
                 {
                     // Try to create the directory.
                     DirectoryInfo di = Directory.CreateDirectory(path);
-                    //MessageBox.Show("The directory was created successfully at);
-
-                    // Delete the directory.
-                    //di.Delete();
-                    //Console.WriteLine("The directory was deleted successfully.");
 
                     contador = 0;
 
                     if (output != "" && pictureBox1.Image != null)
                     {
-                        //Abrimos el puerto
-                        serialPort1.Open();
-                        //Enviamos el valor al puerto
-                        serialPort1.Write(valorA);
-
+                       
+                        try
+                        {
                         //Creamos la carpeta en el servidor
                         WebRequest request = WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorA);
                         request.Method = WebRequestMethods.Ftp.MakeDirectory;
                         request.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
-                        try
-                        {
-                            request.GetResponse();
+                        request.GetResponse();
+                        //Abrimos el puerto
+                        serialPort1.Open();
+                        //Enviamos el valor al puerto
+                        serialPort1.Write(valorA);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            MessageBox.Show("Error" + ex);
+                            MessageBox.Show("Ya existe una carpeta para este paciente en el servidor");
                         }
 
                         //Creamos el timer para la rutina de tomar imagenes
@@ -189,67 +205,55 @@ namespace Escaner_WindowsFormsApp
         {
             Invoke(new Action(() =>
             {
-
-                Invoke(new Action(() =>
-                {
-
-                    contador += 1;
-
-                    if (contador < 152)
-                    {
-                        pictureBox1.Image.Save(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
-                    }
-                    else
-                    {
-                        //t.Stop();
-                        //Creamos el timer para la rutina de tomar imagenes
-                        t = new System.Timers.Timer();
-                        t.Interval = 1000;
-                        t.Elapsed += OnTimeEvent4;
-                        contador = 0;
-                        t.Start();
-                    }
-                }));
-            }));
-        }
-
-        private void OnTimeEvent4(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            Invoke(new Action(() =>
-            {
                 contador += 1;
+
 
                 if (contador < 152)
                 {
+                    pictureBox1.Image.Save(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
 
-                    //Subimos al servidor las imagenes
-                    FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorA + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
+                }
+                else if (contador >= 153)
+                {
 
-                    ftpReq.UseBinary = true;
-                    ftpReq.Method = WebRequestMethods.Ftp.UploadFile;
-                    ftpReq.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
+                    contador2 += 1;
 
-                    //byte[] b = File.ReadAllBytes(@"C:\prueba\111\target.zip");
-                    byte[] b = File.ReadAllBytes(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
-                    ftpReq.ContentLength = b.Length;
-                    using (Stream s = ftpReq.GetRequestStream())
+                    if (contador2 < 152)
                     {
-                        s.Write(b, 0, b.Length);
-                    }
+                        //Subimos al servidor las imagenes
+                        FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorA + "\\Imagen_" + contador2 + "_" + textCedula.Text + ".png");
 
-                    FtpWebResponse ftpResp = (FtpWebResponse)ftpReq.GetResponse();
+                        ftpReq.UseBinary = true;
+                        ftpReq.Method = WebRequestMethods.Ftp.UploadFile;
+                        ftpReq.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
 
-                    if (ftpResp != null)
-                    {
-                        if (ftpResp.StatusDescription.StartsWith("226"))
+                        //byte[] b = File.ReadAllBytes(@"C:\prueba\111\target.zip");
+                        byte[] b = File.ReadAllBytes(path + "\\Imagen_" + contador2 + "_" + textCedula.Text + ".png");
+                        ftpReq.ContentLength = b.Length;
+                        using (Stream s = ftpReq.GetRequestStream())
                         {
-                            Console.WriteLine("File Uploaded.");
+                            s.Write(b, 0, b.Length);
                         }
+
+                        FtpWebResponse ftpResp = (FtpWebResponse)ftpReq.GetResponse();
+
+                        if (ftpResp != null)
+                        {
+                            if (ftpResp.StatusDescription.StartsWith("226"))
+                            {
+                                Console.WriteLine("File Uploaded.");
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        t.Stop();
                     }
                 }
                 else
                 {
-                    t.Stop();
+                    // t.Stop();
                 }
             }));
         }
@@ -281,28 +285,26 @@ namespace Escaner_WindowsFormsApp
                     //Console.WriteLine("The directory was deleted successfully.");
 
                     contador = 0;
+                    contador2 = 0;
 
                     if (output != "" && pictureBox1.Image != null)
                     {
-                       //pictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipY);
-                        
-
-                        //Abrimos el puerto
-                        serialPort1.Open();
-                        //Enviamos el valor al puerto
-                        serialPort1.Write(valorB);
-
-                        //Creamos la carpeta en el servidor
-                        WebRequest request = WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorB);
-                        request.Method = WebRequestMethods.Ftp.MakeDirectory;
-                        request.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
                         try
                         {
+                           
+                            //Creamos la carpeta en el servidor
+                            WebRequest request = WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorB);
+                            request.Method = WebRequestMethods.Ftp.MakeDirectory;
+                            request.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
                             request.GetResponse();
+                            //Abrimos el puerto
+                            serialPort1.Open();
+                            //Enviamos el valor al puerto
+                            serialPort1.Write(valorB);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            MessageBox.Show("Error" + ex);
+                            MessageBox.Show("Ya existe una carpeta para este paciente en el servidor");
                         }
 
                         //Creamos el timer para la rutina de tomar imagenes
@@ -313,11 +315,6 @@ namespace Escaner_WindowsFormsApp
                     }
                 }
                 serialPort1.Close();
-                //Creamos el timer para la rutina de tomar imagenes
-                k = new System.Timers.Timer();
-                k.Interval = 1000;
-                k.Elapsed += OnTimeEvent3;
-                contador = 0;
             }
             catch (Exception ex)
             {
@@ -330,59 +327,53 @@ namespace Escaner_WindowsFormsApp
             Invoke(new Action(() =>
             {
                 contador += 1;
+               
 
                 if (contador < 33)
                 {
                     pictureBox1.Image.Save(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
 
                 }
-                else
-                {
-                    t.Stop();
-                }
-            }));
-        }
+                else if (contador >= 34) {
 
-        //Timer despues de la rutina para subir
+                    contador2 += 1;
 
-        private void OnTimeEvent3(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            Invoke(new Action(() =>
-            {
-                contador += 1;
-
-                if (contador < 33)
-                {
-
-                    //Subimos al servidor las imagenes
-                    FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorB + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
-
-                    ftpReq.UseBinary = true;
-                    ftpReq.Method = WebRequestMethods.Ftp.UploadFile;
-                    ftpReq.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
-
-                    //byte[] b = File.ReadAllBytes(@"C:\prueba\111\target.zip");
-                    byte[] b = File.ReadAllBytes(path + "\\Imagen_" + contador + "_" + textCedula.Text + ".png");
-                    ftpReq.ContentLength = b.Length;
-                    using (Stream s = ftpReq.GetRequestStream())
+                    if (contador2 < 33)
                     {
-                        s.Write(b, 0, b.Length);
-                    }
+                        //Subimos al servidor las imagenes
+                        FtpWebRequest ftpReq = (FtpWebRequest)WebRequest.Create("ftp://cloud007.solusoftware.com/" + textCedula.Text + valorB + "\\Imagen_" + contador2 + "_" + textCedula.Text + ".png");
 
-                    FtpWebResponse ftpResp = (FtpWebResponse)ftpReq.GetResponse();
+                        ftpReq.UseBinary = true;
+                        ftpReq.Method = WebRequestMethods.Ftp.UploadFile;
+                        ftpReq.Credentials = new NetworkCredential("didacoru", "a8q@8F@Z");
 
-                    if (ftpResp != null)
-                    {
-                        if (ftpResp.StatusDescription.StartsWith("226"))
+                        //byte[] b = File.ReadAllBytes(@"C:\prueba\111\target.zip");
+                        byte[] b = File.ReadAllBytes(path + "\\Imagen_" + contador2 + "_" + textCedula.Text + ".png");
+                        ftpReq.ContentLength = b.Length;
+                        using (Stream s = ftpReq.GetRequestStream())
                         {
-                            Console.WriteLine("File Uploaded.");
+                            s.Write(b, 0, b.Length);
                         }
 
+                        FtpWebResponse ftpResp = (FtpWebResponse)ftpReq.GetResponse();
+
+                        if (ftpResp != null)
+                        {
+                            if (ftpResp.StatusDescription.StartsWith("226"))
+                            {
+                                Console.WriteLine("File Uploaded.");
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        t.Stop();
                     }
                 }
                 else
                 {
-                    t.Stop();
+                   // Nothing
                 }
             }));
         }

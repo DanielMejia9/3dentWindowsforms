@@ -50,7 +50,7 @@ namespace Escaner_WindowsFormsApp
                     }
                     else
                     {
-                        
+                        MessageBox.Show("Usuario o  Contraseña invalido");
 
                     }
                     break;
